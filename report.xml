@@ -22,20 +22,20 @@
                     /* Márgenes de la página física */
                     margin: 0 !important; /* Reseteamos para que body/html controle los paddings */
                     padding: 0 !important;
-                    /* Configuración adicional para manejo de tablas */
-                    orphans: 3;
-                    widows: 3;
                 }
                 html, body {
                     margin: 0 !important;
-                    padding: 60px 50px 100px 50px !important; /* Increased top and bottom padding */
+                    padding: 40px 50px 80px 50px !important; /* top, right, bottom, left */
                     width: 100% !important;
-                    position: relative;
+                    /* Eliminamos alturas fijas o mínimas para que el contenido fluya */
+                    /* height: 100% !important; */
+                    /* min-height: 100% !important; */
+                    position: relative; /* Importante para el z-index de main-container */
                     background-color: transparent;
                     font-family: 'Lato', sans-serif;
-                    box-sizing: border-box;
-                    overflow-x: hidden;
-                    overflow-y: visible;
+                    box-sizing: border-box; /* Incluye padding en el ancho/alto si se definiera */
+                    overflow-x: hidden; /* Evita barras de desplazamiento horizontales */
+                    overflow-y: visible; /* Permite que el contenido se extienda y genere nuevas páginas */
                 }
 
                 .main-container {
@@ -104,39 +104,30 @@
                     border-collapse: collapse;
                     font-size: 13px;
                     margin-top: 25px;
-                    margin-bottom: 20px;
+                    /* Añadir un margen inferior para que no quede pegada al final de la página si se corta */
+                    margin-bottom: 10px;
+                    page-break-inside: avoid;
                 }
 
                 /* CLAVE PARA REPETIR ENCABEZADOS DE TABLA EN CADA PÁGINA */
                 .cotizacion-table thead, .optional-elements-table thead {
                     display: table-header-group;
+                    min-height: 40px; /* Asegura un espacio mínimo para el encabezado */
                 }
-                
-                .cotizacion-table thead tr, .optional-elements-table thead tr {
-                    page-break-inside: avoid;
-                    page-break-after: avoid;
-                    background-color: inherit !important;
-                }
-                
-                /* Evitar que las filas se corten */
+                /* Evitar que las filas se corten y asegurar separación */
                 .cotizacion-table tbody, .optional-elements-table tbody {
                     display: table-row-group;
+                    margin-top: 2px; /* Pequeño margen para separar del encabezado */
                 }
-                
                 .cotizacion-table tbody tr, .optional-elements-table tbody tr {
-                    page-break-inside: avoid;
+                    page-break-inside: avoid; /* Evita cortes dentro de filas */
+                    page-break-after: auto; /* No fuerza salto después de cada fila */
                 }
-                
-                /* Espaciado específico para evitar solapamientos */
-                .cotizacion-table, .optional-elements-table {
-                    page-break-before: auto;
-                    page-break-after: auto;
-                }
-                
-                /* Margen superior para el primer elemento de la tabla después del header */
-                .cotizacion-table tbody tr:first-child,
-                .optional-elements-table tbody tr:first-child {
-                    border-top: 2px solid transparent;
+
+                /* FIX: Agregar espacio suficiente después del encabezado para evitar solapamiento */
+                .cotizacion-table tbody tr:first-child td, 
+                .optional-elements-table tbody tr:first-child td {
+                    padding-top: 12px;
                 }
 
                 .cotizacion-table th, .optional-elements-table th {
