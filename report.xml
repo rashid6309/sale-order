@@ -104,30 +104,23 @@
                     border-collapse: collapse;
                     font-size: 13px;
                     margin-top: 25px;
-                    /* Añadir un margen inferior para que no quede pegada al final de la página si se corta */
-                    margin-bottom: 10px;
-                    page-break-inside: avoid;
+                    margin-bottom: 20px;
                 }
 
-                /* CLAVE PARA REPETIR ENCABEZADOS DE TABLA EN CADA PÁGINA */
+                /* ENCABEZADOS DE TABLA CON REPETICION CORRECTA */
                 .cotizacion-table thead, .optional-elements-table thead {
                     display: table-header-group;
-                    min-height: 40px; /* Asegura un espacio mínimo para el encabezado */
                 }
-                /* Evitar que las filas se corten y asegurar separación */
-                .cotizacion-table tbody, .optional-elements-table tbody {
-                    display: table-row-group;
-                    margin-top: 2px; /* Pequeño margen para separar del encabezado */
-                }
-                .cotizacion-table tbody tr, .optional-elements-table tbody tr {
-                    page-break-inside: avoid; /* Evita cortes dentro de filas */
-                    page-break-after: auto; /* No fuerza salto después de cada fila */
-                }
-
-                /* FIX: Agregar espacio suficiente después del encabezado para evitar solapamiento */
+                
+                /* EVITAR OVERLAP: Crear espacio despues del header */
                 .cotizacion-table tbody tr:first-child td, 
                 .optional-elements-table tbody tr:first-child td {
-                    padding-top: 12px;
+                    padding-top: 20px !important;
+                }
+                
+                /* CONTROL DE SALTOS DE PAGINA PARA FILAS */
+                .cotizacion-table tbody tr, .optional-elements-table tbody tr {
+                    page-break-inside: avoid;
                 }
 
                 .cotizacion-table th, .optional-elements-table th {
