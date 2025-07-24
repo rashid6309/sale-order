@@ -28,17 +28,14 @@
                 }
                 html, body {
                     margin: 0 !important;
-                    padding: 40px 50px 80px 50px !important; /* top, right, bottom, left */
+                    padding: 60px 50px 100px 50px !important; /* Increased top and bottom padding */
                     width: 100% !important;
-                    /* Eliminamos alturas fijas o mínimas para que el contenido fluya */
-                    /* height: 100% !important; */
-                    /* min-height: 100% !important; */
-                    position: relative; /* Importante para el z-index de main-container */
+                    position: relative;
                     background-color: transparent;
                     font-family: 'Lato', sans-serif;
-                    box-sizing: border-box; /* Incluye padding en el ancho/alto si se definiera */
-                    overflow-x: hidden; /* Evita barras de desplazamiento horizontales */
-                    overflow-y: visible; /* Permite que el contenido se extienda y genere nuevas páginas */
+                    box-sizing: border-box;
+                    overflow-x: hidden;
+                    overflow-y: visible;
                 }
 
                 .main-container {
@@ -107,50 +104,39 @@
                     border-collapse: collapse;
                     font-size: 13px;
                     margin-top: 25px;
-                    /* Añadir un margen inferior para que no quede pegada al final de la página si se corta */
                     margin-bottom: 20px;
-                    /* Removemos page-break-inside: avoid para permitir que la tabla se divida entre páginas */
                 }
 
                 /* CLAVE PARA REPETIR ENCABEZADOS DE TABLA EN CADA PÁGINA */
                 .cotizacion-table thead, .optional-elements-table thead {
                     display: table-header-group;
-                    page-break-inside: avoid; /* Evita que el encabezado se divida */
-                    page-break-after: avoid; /* Evita salto de página inmediatamente después del encabezado */
                 }
                 
                 .cotizacion-table thead tr, .optional-elements-table thead tr {
                     page-break-inside: avoid;
                     page-break-after: avoid;
+                    background-color: inherit !important;
                 }
                 
-                /* Evitar que las filas se corten y asegurar separación */
+                /* Evitar que las filas se corten */
                 .cotizacion-table tbody, .optional-elements-table tbody {
                     display: table-row-group;
                 }
                 
                 .cotizacion-table tbody tr, .optional-elements-table tbody tr {
-                    page-break-inside: avoid; /* Evita cortes dentro de filas */
-                    page-break-after: auto; /* No fuerza salto después de cada fila */
+                    page-break-inside: avoid;
                 }
                 
-                /* Asegurar espacio adecuado entre el encabezado y el contenido */
-                .cotizacion-table tbody tr:first-child td, 
-                .optional-elements-table tbody tr:first-child td {
-                    padding-top: 10px;
+                /* Espaciado específico para evitar solapamientos */
+                .cotizacion-table, .optional-elements-table {
+                    page-break-before: auto;
+                    page-break-after: auto;
                 }
                 
-                /* Evitar que los encabezados se solapen con el contenido */
-                .cotizacion-table thead th, 
-                .optional-elements-table thead th {
-                    position: relative;
-                    z-index: 10;
-                }
-                
-                /* Asegurar que hay espacio suficiente después de los encabezados */
-                .cotizacion-table thead + tbody,
-                .optional-elements-table thead + tbody {
-                    margin-top: 5px;
+                /* Margen superior para el primer elemento de la tabla después del header */
+                .cotizacion-table tbody tr:first-child,
+                .optional-elements-table tbody tr:first-child {
+                    border-top: 2px solid transparent;
                 }
 
                 .cotizacion-table th, .optional-elements-table th {
@@ -324,7 +310,7 @@
                 </p>
                 <table class="cotizacion-table" t-attf-style="border: 1px solid #{table_border_color};">
                     <thead>
-                        <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color}; border-bottom: 2px solid #{table_border_color};">
+                        <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color};">
                             <th t-attf-style="width: 50%; padding: 8px; text-align: left; border: 1px solid #{table_border_color};">Descripción</th>
                             <th t-attf-style="width: 14%; padding: 8px; text-align: center; border: 1px solid #{table_border_color};">Cantidad</th>
                             <th t-attf-style="width: 20%; padding: 8px; text-align: center; border: 1px solid #{table_border_color}; white-space: nowrap;">Precio Unitario</th>
@@ -452,7 +438,7 @@
                     </p>
                     <table class="optional-elements-table" t-attf-style="border: 1px solid #{table_border_color};">
                         <thead>
-                            <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color}; border-bottom: 2px solid #{table_border_color};">
+                            <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color};">
                                 <th t-attf-style="width: 50%; padding: 8px; text-align: left; border: 1px solid #{table_border_color};">Descripción</th>
                                 <th t-attf-style="width: 14%; padding: 8px; text-align: center; border: 1px solid #{table_border_color};">Cantidad</th>
                                 <th t-attf-style="width: 20%; padding: 8px; text-align: center; border: 1px solid #{table_border_color}; white-space: nowrap;">Precio Unitario</th>
