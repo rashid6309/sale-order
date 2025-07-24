@@ -115,7 +115,7 @@
                 /* EVITAR OVERLAP: Crear espacio despues del header */
                 .cotizacion-table tbody tr:first-child td, 
                 .optional-elements-table tbody tr:first-child td {
-                    padding-top: 35px !important;
+                    padding-top: 50px !important;
                 }
                 
                 /* CONTROL DE SALTOS DE PAGINA PARA FILAS */
