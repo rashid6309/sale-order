@@ -18,43 +18,49 @@
                 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap" rel="stylesheet"/>
 
                 <style type="text/css">
-                    /* --- BASIC PAGE SETUP --- */
+                    /* --- AJUSTES CLAVE DE PAGINACIÓN Y MÁRGENES --- */
                     @page {
-                        margin: 0 !important;
+                        /* Márgenes de la página física */
+                        margin: 0 !important; /* Reseteamos para que body/html controle los paddings */
                         padding: 0 !important;
                     }
                     html, body {
                         margin: 0 !important;
-                        padding: 40px 50px 80px 50px !important;
+                        padding: 40px 50px 80px 50px !important; /* top, right, bottom, left */
                         width: 100% !important;
-                        position: relative;
+                        /* Eliminamos alturas fijas o mínimas para que el contenido fluya */
+                        /* height: 100% !important; */
+                        /* min-height: 100% !important; */
+                        position: relative; /* Importante para el z-index de main-container */
                         background-color: transparent;
                         font-family: 'Lato', sans-serif;
-                        box-sizing: border-box;
-                        overflow-x: hidden;
-                        overflow-y: visible;
+                        box-sizing: border-box; /* Incluye padding en el ancho/alto si se definiera */
+                        overflow-x: hidden; /* Evita barras de desplazamiento horizontales */
+                        overflow-y: visible; /* Permite que el contenido se extienda y genere nuevas páginas */
                     }
 
-                    /* --- BACKGROUND FIX - Full page coverage --- */
                     .main-container {
-                        position: fixed;
-                        top: -50px;
-                        left: -50px;
-                        width: calc(100% + 100px);
-                        height: calc(100% + 100px);
+                        position: fixed; /* Ahora el fondo es fijo a la página */
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
                         box-sizing: border-box;
                         -webkit-print-color-adjust: exact;
                         color-adjust: exact;
-                        z-index: 0;
+                        z-index: 0; /* Asegura que esté detrás de todo */
+                        /* NOTA: Si el fondo debe repetirse en cada página, esto está bien.
+                                Si solo debe estar en la primera, tendríamos que reubicarlo. */
                     }
 
                     .page-content {
-                        position: relative;
-                        z-index: 1;
-                        padding: 0;
-                        width: 100%;
+                        position: relative; /* Relativo al flujo del documento */
+                        z-index: 1; /* Asegura que esté encima del fondo */
+                        padding: 0; /* Ya lo controla el padding del body */
+                        width: 100%; /* Ocupa el 100% del espacio DISPONIBLE dentro del body con padding */
                         box-sizing: border-box;
-                        color: inherit;
+                        /* min-height: 100%; */ /* Eliminado para que fluya */
+                        color: inherit; /* Hereda el color del body/html */
                     }
 
                     .header-line {
@@ -62,11 +68,12 @@
                         width: 100%;
                         display: block;
                         margin-bottom: 20px;
+                        /* El color se aplicará dinámicamente */
                     }
 
                     .logo-container {
                         text-align: left;
-                        margin-top: 0;
+                        margin-top: 0; /* Ya compensado por el padding-top del body */
                         margin-bottom: 30px;
                         display: block;
                         overflow: hidden;
@@ -92,28 +99,24 @@
                         font-weight: bold;
                     }
 
-                    /* --- TABLE STYLES WITH BETTER PAGE BREAKS --- */
+                    /* --- ESTILOS ESPECÍFICOS PARA LA TABLA DE COTIZACIÓN PRINCIPAL Y OPCIONALES --- */
                     .cotizacion-table, .optional-elements-table {
                         width: 100%;
                         border-collapse: collapse;
                         font-size: 13px;
                         margin-top: 25px;
+                        /* Añadir un margen inferior para que no quede pegada al final de la página si se corta */
                         margin-bottom: 10px;
                     }
 
-                    /* Better header repetition without overlap */
+                    /* CLAVE PARA REPETIR ENCABEZADOS DE TABLA EN CADA PÁGINA */
                     .cotizacion-table thead, .optional-elements-table thead {
                         display: table-header-group;
                     }
-                    
-                    /* Add top margin on subsequent pages to prevent header overlap */
-                    .cotizacion-table, .optional-elements-table {
-                        page-break-before: auto;
-                    }
-                    
+                    /* Evitar que las filas se corten justo en el medio, si es posible */
                     .cotizacion-table tbody tr, .optional-elements-table tbody tr {
-                        page-break-inside: avoid;
-                        page-break-after: auto;
+                        page-break-inside: avoid; /* Permite cortar, pero intenta evitarlo */
+                        page-break-after: auto; /* No fuerza salto después de cada fila */
                     }
 
                     .cotizacion-table th, .optional-elements-table th {
@@ -127,7 +130,7 @@
                         vertical-align: top;
                     }
 
-                    /* Numeric alignment */
+                    /* Alineación de datos numéricos en ambas tablas */
                     .cotizacion-table td:nth-child(2),
                     .cotizacion-table td:nth-child(3),
                     .cotizacion-table td:nth-child(4),
@@ -136,6 +139,7 @@
                     .optional-elements-table td:nth-child(4) {
                         text-align: right;
                     }
+                    /* Alineación de encabezados numéricos en ambas tablas */
                     .cotizacion-table th:nth-child(2),
                     .cotizacion-table th:nth-child(3),
                     .cotizacion-table th:nth-child(4),
@@ -145,31 +149,31 @@
                         text-align: center;
                     }
 
-                    /* --- SUMMARY TABLE --- */
+                    /* --- ESTILOS ESPECÍFICOS PARA LA TABLA DE RESUMEN --- */
                     .resumen-table {
                         width: 40%;
                         margin-top: 20px;
                         margin-left: auto;
                         font-size: 13px;
                         border-collapse: collapse;
-                        page-break-inside: avoid;
+                        page-break-inside: avoid; /* Evita que la tabla de resumen se corte a la mitad */
                     }
                     .resumen-table td {
                         padding: 6px;
                         text-align: right;
                     }
 
-                    /* --- FOOTER FIX --- */
+                    /* --- ESTILOS ESPECÍFICOS PARA EL PIE DE PÁGINA --- */
                     .footer-container {
-                        position: fixed;
-                        bottom: 30px;
+                        position: fixed; /* Posición fija para el pie de página */
+                        bottom: 30px; /* Separación del borde inferior de la página */
                         left: 0;
                         right: 0;
-                        padding: 0 50px;
-                        box-sizing: border-box;
-                        z-index: 99;
-                        height: 25px;
-                        background-color: transparent;
+                        padding: 0 50px; /* Padding izquierdo y derecho para que coincida con el contenido */
+                        box-sizing: border-box; /* Incluye el padding en el ancho */
+                        z-index: 99; /* Siempre encima */
+                        height: 25px; /* Altura fija para el pie de página */
+                        background-color: transparent; /* Asegura que el fondo no sea opaco por defecto */
                     }
 
                     .custom-footer-line {
@@ -199,10 +203,12 @@
                         right: 0;
                     }
                     
+
+
                     .oe_structure {
                         page-break-after: avoid;
                     }
-                    .page-content > *:last-child:not(.oe_structure) {
+                    .page-content &gt; *:last-child:not(.oe_structure) {
                         page-break-after: avoid;
                     }
                 </style>
@@ -256,9 +262,17 @@
                             </t>
                         </p>
 
+						<!-- COEMNTADO PARA CORREGIR EL USO HORARIO
+                        <t t-set="fecha" t-value="doc.x_studio_inicio and doc.x_studio_inicio.strftime('%d/%m/%Y') or ''"/>
+                        <t t-set="hora_inicio" t-value="doc.x_studio_inicio and doc.x_studio_inicio.strftime('%H:%M') or ''"/>
+                        <t t-set="hora_fin" t-value="doc.x_studio_fin and doc.x_studio_fin.strftime('%H:%M') or ''"/>
+                        -->
+
                         <t t-set="fecha" t-value="doc.x_studio_inicio and (doc.x_studio_inicio - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') or ''"/>
                         <t t-set="hora_inicio" t-value="doc.x_studio_inicio and (doc.x_studio_inicio - datetime.timedelta(hours=3)).strftime('%H:%M') or ''"/>
                         <t t-set="hora_fin" t-value="doc.x_studio_fin and (doc.x_studio_fin - datetime.timedelta(hours=3)).strftime('%H:%M') or ''"/>
+
+
 
                         <p t-attf-style="color: #{text_color};">
                             - FECHA:
@@ -288,12 +302,36 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
+                            <!--
+                            <t t-foreach="doc.order_line" t-as="line">
+                                <tr t-attf-style="color: #{table_body_text_color};">
+                                    <td t-attf-style="padding: 6px; border: 1px solid #{table_border_color};">
+                                        <t t-esc="line.name"/>
+                                    </td>
+                                    <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
+                                        <t t-esc="('%.0f' % line.product_uom_qty)"/>
+                                    </td>
+                                    <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
+                                        <t t-esc="doc.currency_id.symbol"/>
+                                        <t t-esc="'{:,.0f}'.format(doc.currency_id.round(line.price_unit)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
+                                    </td>
+                                    <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
+                                        <t t-set="importe_sin_descuento" t-value="line.product_uom_qty * line.price_unit"/>
+                                        <t t-esc="doc.currency_id.symbol"/>
+                                        <t t-esc="'{:,.0f}'.format(doc.currency_id.round(importe_sin_descuento)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            -->
+                            
+                            
                             <t t-foreach="doc.order_line" t-as="line"> 
                                 <t t-set="importe_sin_descuento" t-value="line.product_uom_qty * line.price_unit"/>
                                 <tr t-attf-style="color: #{table_body_text_color}; page-break-inside: avoid;">
                                     
                                     <!-- Descripción: en cursiva y negrita si es sección -->
-                                    <td t-att-style="'padding: 6px; ' + ('border-left: 1px solid ' + table_border_color + '; border-bottom: 1px solid ' + table_border_color + ';' if line.display_type == 'line_section' else 'border: 1px solid ' + table_border_color + ';') + ('font-style: italic; font-weight: bold;' if line.display_type == 'line_section' else '')">
+                                    <td t-att-style="'padding: 6px; ' +                                         ('border-left: 1px solid ' + table_border_color + '; border-bottom: 1px solid ' + table_border_color + ';' if line.display_type == 'line_section'                                          else 'border: 1px solid ' + table_border_color + ';') +                                         ('font-style: italic; font-weight: bold;' if line.display_type == 'line_section' else '')">
                                         <t t-set="name_parts" t-value="line.name.split('\n')"/>
                                         <t t-if="name_parts">
                                             <span t-out="name_parts[0]"/> <!-- Título -->
@@ -332,6 +370,11 @@
                                     </td>
                                 </tr>
                             </t>
+
+                        
+                            
+
+
                         </tbody>
                     </table>
                     <t t-set="subtotal_sin_descuento" t-value="sum(line.product_uom_qty * line.price_unit for line in doc.order_line)"/>
