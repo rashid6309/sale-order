@@ -116,7 +116,21 @@
                     /* Evitar que las filas se corten justo en el medio, si es posible */
                     .cotizacion-table tbody tr, .optional-elements-table tbody tr {
                         page-break-inside: avoid; /* Permite cortar, pero intenta evitarlo */
+                        break-inside: avoid; /* Mejor compatibilidad con wkhtmltopdf y navegadores modernos */
                         page-break-after: auto; /* No fuerza salto después de cada fila */
+                    }
+                    /* Asegura que la tabla completa no se corte mal */
+                    .cotizacion-table, .optional-elements-table {
+                        page-break-inside: auto;
+                        break-inside: auto;
+                    }
+                    /* Añadir margen superior a la página para evitar solapamiento de header */
+                    .page-content {
+                        margin-top: 20px;
+                    }
+                    /* Añadir margen superior al primer elemento después de un salto de página */
+                    .cotizacion-table, .optional-elements-table {
+                        margin-top: 25px;
                     }
 
                     .cotizacion-table th, .optional-elements-table th {
