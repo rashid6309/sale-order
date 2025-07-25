@@ -116,33 +116,7 @@
                     /* Evitar que las filas se corten justo en el medio, si es posible */
                     .cotizacion-table tbody tr, .optional-elements-table tbody tr {
                         page-break-inside: avoid; /* Permite cortar, pero intenta evitarlo */
-                        break-inside: avoid; /* Mejor compatibilidad con wkhtmltopdf y navegadores modernos */
                         page-break-after: auto; /* No fuerza salto después de cada fila */
-                    }
-                    /* Asegura que la tabla completa no se corte mal */
-                    .cotizacion-table, .optional-elements-table {
-                        page-break-inside: auto;
-                        break-inside: auto;
-                    }
-                    /* Helper to force a page break before an element */
-                    .page-break-before {
-                        page-break-before: always;
-                        break-before: page;
-                    }
-                    /* Prevent table rows from splitting and help wkhtmltopdf with min-height */
-                    .cotizacion-table tbody tr, .optional-elements-table tbody tr {
-                        page-break-inside: avoid;
-                        break-inside: avoid;
-                        page-break-after: auto;
-                        min-height: 24px; /* Helps prevent row splitting */
-                    }
-                    /* Ensure enough top margin to prevent header overlap. Adjust as needed. */
-                    .page-content {
-                        margin-top: 40px; /* Increase if header still overlaps */
-                    }
-                    /* Añadir margen superior al primer elemento después de un salto de página */
-                    .cotizacion-table, .optional-elements-table {
-                        margin-top: 25px;
                     }
 
                     .cotizacion-table th, .optional-elements-table th {
@@ -328,13 +302,39 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
+                            <!--
                             <t t-foreach="doc.order_line" t-as="line">
+                                <tr t-attf-style="color: #{table_body_text_color};">
+                                    <td t-attf-style="padding: 6px; border: 1px solid #{table_border_color};">
+                                        <t t-esc="line.name"/>
+                                    </td>
+                                    <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
+                                        <t t-esc="('%.0f' % line.product_uom_qty)"/>
+                                    </td>
+                                    <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
+                                        <t t-esc="doc.currency_id.symbol"/>
+                                        <t t-esc="'{:,.0f}'.format(doc.currency_id.round(line.price_unit)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
+                                    </td>
+                                    <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
+                                        <t t-set="importe_sin_descuento" t-value="line.product_uom_qty * line.price_unit"/>
+                                        <t t-esc="doc.currency_id.symbol"/>
+                                        <t t-esc="'{:,.0f}'.format(doc.currency_id.round(importe_sin_descuento)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            -->
+                            
+                            
+                            <t t-foreach="doc.order_line" t-as="line"> 
                                 <t t-set="importe_sin_descuento" t-value="line.product_uom_qty * line.price_unit"/>
-                                <tr t-attf-style="color: #{table_body_text_color}; page-break-inside: avoid; break-inside: avoid;">
-                                    <td t-att-style="'padding: 6px; ' + ('border-left: 1px solid ' + table_border_color + '; border-bottom: 1px solid ' + table_border_color + ';' if line.display_type == 'line_section' else 'border: 1px solid ' + table_border_color + ';') + ('font-style: italic; font-weight: bold;' if line.display_type == 'line_section' else '')">
+                                <tr t-attf-style="color: #{table_body_text_color}; page-break-inside: avoid;">
+                                    
+                                    <!-- Descripción: en cursiva y negrita si es sección -->
+                                    <td t-att-style="'padding: 6px; ' +                                         ('border-left: 1px solid ' + table_border_color + '; border-bottom: 1px solid ' + table_border_color + ';' if line.display_type == 'line_section'                                          else 'border: 1px solid ' + table_border_color + ';') +                                         ('font-style: italic; font-weight: bold;' if line.display_type == 'line_section' else '')">
                                         <t t-set="name_parts" t-value="line.name.split('\n')"/>
                                         <t t-if="name_parts">
-                                            <span t-out="name_parts[0]"/>
+                                            <span t-out="name_parts[0]"/> <!-- Título -->
                                             <t t-if="len(name_parts) &gt; 1">
                                                 <br/>
                                                 <em>
@@ -345,17 +345,23 @@
                                             </t>
                                         </t>
                                     </td>
+                            
+                                    <!-- Cantidad: solo si no es sección -->
                                     <td t-att-style="'padding: 6px; text-align: right; ' + ('border: 1px solid ' + table_border_color if line.display_type != 'line_section' else 'border: none')">
                                         <t t-if="line.display_type != 'line_section'">
                                             <t t-esc="('%.0f' % line.product_uom_qty)"/>
                                         </t>
                                     </td>
+                            
+                                    <!-- Precio unitario: solo si no es sección -->
                                     <td t-att-style="'padding: 6px; text-align: right; ' + ('border: 1px solid ' + table_border_color if line.display_type != 'line_section' else 'border: none')">
                                         <t t-if="line.display_type != 'line_section'">
                                             <t t-esc="doc.currency_id.symbol"/>
                                             <t t-esc="'{:,.0f}'.format(doc.currency_id.round(line.price_unit)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
                                         </t>
                                     </td>
+                            
+                                    <!-- Total: solo si no es sección -->
                                     <td t-att-style="'padding: 6px; text-align: right; ' + ('border: 1px solid ' + table_border_color if line.display_type != 'line_section' else 'border: none')">
                                         <t t-if="line.display_type != 'line_section'">
                                             <t t-esc="doc.currency_id.symbol"/>
@@ -364,8 +370,6 @@
                                     </td>
                                 </tr>
                             </t>
-                        </tbody>
-                    </table>
 
                         
                             
