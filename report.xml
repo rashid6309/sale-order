@@ -18,47 +18,43 @@
                 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap" rel="stylesheet"/>
 
                 <style type="text/css">
+                    /* --- BASIC PAGE SETUP --- */
                     @page {
-                        margin: 0;
-                        size: A4;
-                        background-color: transparent;
-                        -webkit-print-color-adjust: exact;
-                        color-adjust: exact;
+                        margin: 0 !important;
+                        padding: 0 !important;
                     }
-                    
                     html, body {
-                        margin: 0;
-                        padding: 0;
-                        width: 100%;
-                        height: 100vh;
+                        margin: 0 !important;
+                        padding: 40px 50px 80px 50px !important;
+                        width: 100% !important;
+                        position: relative;
+                        background-color: transparent;
                         font-family: 'Lato', sans-serif;
+                        box-sizing: border-box;
+                        overflow-x: hidden;
+                        overflow-y: visible;
+                    }
+
+                    /* --- BACKGROUND FIX - Full page coverage --- */
+                    .main-container {
+                        position: fixed;
+                        top: -50px;
+                        left: -50px;
+                        width: calc(100% + 100px);
+                        height: calc(100% + 100px);
                         box-sizing: border-box;
                         -webkit-print-color-adjust: exact;
                         color-adjust: exact;
+                        z-index: 0;
                     }
 
-                    body {
-                        padding: 40px 50px 80px 50px;
-                        position: relative;
-                    }
-
-                    /* Full page background that works with wkhtmltopdf */
-                    .page-background {
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100vw;
-                        height: 100vh;
-                        z-index: -1;
-                        -webkit-print-color-adjust: exact;
-                        color-adjust: exact;
-                    }
-
-                    .main-container {
+                    .page-content {
                         position: relative;
                         z-index: 1;
-                        min-height: calc(100vh - 120px);
+                        padding: 0;
                         width: 100%;
+                        box-sizing: border-box;
+                        color: inherit;
                     }
 
                     .header-line {
@@ -70,8 +66,10 @@
 
                     .logo-container {
                         text-align: left;
+                        margin-top: 0;
                         margin-bottom: 30px;
                         display: block;
+                        overflow: hidden;
                     }
 
                     .logo-container img {
@@ -94,27 +92,26 @@
                         font-weight: bold;
                     }
 
-                    /* Fixed table styling for proper page breaks */
+                    /* --- TABLE STYLES WITH BETTER PAGE BREAKS --- */
                     .cotizacion-table, .optional-elements-table {
                         width: 100%;
                         border-collapse: collapse;
                         font-size: 13px;
                         margin-top: 25px;
-                        margin-bottom: 20px;
-                        page-break-inside: auto;
+                        margin-bottom: 10px;
                     }
 
-                    /* Ensure headers repeat properly */
+                    /* Better header repetition without overlap */
                     .cotizacion-table thead, .optional-elements-table thead {
                         display: table-header-group;
                     }
                     
-                    .cotizacion-table tbody, .optional-elements-table tbody {
-                        display: table-row-group;
+                    /* Add top margin on subsequent pages to prevent header overlap */
+                    .cotizacion-table, .optional-elements-table {
+                        page-break-before: auto;
                     }
-
-                    /* Prevent bad page breaks */
-                    .cotizacion-table tr, .optional-elements-table tr {
+                    
+                    .cotizacion-table tbody tr, .optional-elements-table tbody tr {
                         page-break-inside: avoid;
                         page-break-after: auto;
                     }
@@ -123,7 +120,6 @@
                         padding: 8px;
                         text-align: left;
                         vertical-align: middle;
-                        page-break-inside: avoid;
                     }
 
                     .cotizacion-table td, .optional-elements-table td {
@@ -131,7 +127,7 @@
                         vertical-align: top;
                     }
 
-                    /* Numeric column alignment */
+                    /* Numeric alignment */
                     .cotizacion-table td:nth-child(2),
                     .cotizacion-table td:nth-child(3),
                     .cotizacion-table td:nth-child(4),
@@ -140,7 +136,6 @@
                     .optional-elements-table td:nth-child(4) {
                         text-align: right;
                     }
-                    
                     .cotizacion-table th:nth-child(2),
                     .cotizacion-table th:nth-child(3),
                     .cotizacion-table th:nth-child(4),
@@ -150,7 +145,7 @@
                         text-align: center;
                     }
 
-                    /* Summary table */
+                    /* --- SUMMARY TABLE --- */
                     .resumen-table {
                         width: 40%;
                         margin-top: 20px;
@@ -164,14 +159,17 @@
                         text-align: right;
                     }
 
-                    /* Fixed footer positioning */
+                    /* --- FOOTER FIX --- */
                     .footer-container {
                         position: fixed;
                         bottom: 30px;
-                        left: 50px;
-                        right: 50px;
-                        z-index: 999;
+                        left: 0;
+                        right: 0;
+                        padding: 0 50px;
+                        box-sizing: border-box;
+                        z-index: 99;
                         height: 25px;
+                        background-color: transparent;
                     }
 
                     .custom-footer-line {
@@ -200,31 +198,27 @@
                     .footer-text-right {
                         right: 0;
                     }
-
-                    /* Prevent orphaned content */
-                    .page-section {
-                        page-break-inside: avoid;
-                    }
                     
-                    /* Better spacing for conditions section */
-                    .conditions-section {
-                        margin-top: 35px;
-                        page-break-inside: avoid;
+                    .oe_structure {
+                        page-break-after: avoid;
+                    }
+                    .page-content > *:last-child:not(.oe_structure) {
+                        page-break-after: avoid;
                     }
                 </style>
             </head>
 
             <body>
-                <!-- Full page background -->
-                <div class="page-background" t-attf-style="background-color: #{background_color};"></div>
+                <div class="main-container" t-attf-style="background-color: #{background_color};">
+                </div>
 
-                <div class="main-container" t-attf-style="color: #{text_color};">
+                <div class="page-content" t-attf-style="color: #{text_color};">
 
-                    <div class="header-line" t-attf-style="background-color: #{line_color};"/>
+                    <div class="header-line" t-attf-style="height: 1px; background-color: #{line_color}; width: 100%; display: block; margin-bottom: 20px;"/>
 
                     <div class="logo-container">
                         <t t-if="doc.x_studio_diseo_informe and doc.x_studio_diseo_informe.id">
-                            <img t-att-src="doc.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/web/image/x_layout_de_presupuest/%s/x_studio_image' % doc.x_studio_diseo_informe.id" alt="Logo de la empresa"/>
+                            <img t-att-src="doc.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/web/image/x_layout_de_presupuest/%s/x_studio_image' % doc.x_studio_diseo_informe.id" alt="Logo de la empresa" style="max-width: 250px; max-height: 100px;"/>
                         </t>
                         <t t-else="">
                             <span style="color: red;">Logo no configurado o diseño inválido.</span>
@@ -284,26 +278,25 @@
                     <p t-attf-style="font-size: 14px; margin-top: 40px; margin-bottom: 10px; color: #{text_color};">
                         <strong>&gt; COTIZACIÓN BASE</strong>
                     </p>
-                    
                     <table class="cotizacion-table" t-attf-style="border: 1px solid #{table_border_color};">
                         <thead>
-                            <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color};">
-                                <th t-attf-style="border: 1px solid #{table_border_color}; width: 50%;">Descripción</th>
-                                <th t-attf-style="border: 1px solid #{table_border_color}; width: 14%;">Cantidad</th>
-                                <th t-attf-style="border: 1px solid #{table_border_color}; width: 20%;">Precio Unitario</th>
-                                <th t-attf-style="border: 1px solid #{table_border_color}; width: 16%;">Total</th>
+                            <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color}; page-break-inside: avoid;">
+                                <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid #{table_border_color};">Descripción</th>
+                                <th style="width: 14%; padding: 8px; text-align: center; border: 1px solid #{table_border_color};">Cantidad</th>
+                                <th style="width: 20%; padding: 8px; text-align: center; border: 1px solid #{table_border_color}; white-space: nowrap;">Precio Unitario</th>
+                                <th style="width: 16%; padding: 8px; text-align: center; border: 1px solid #{table_border_color};">Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-foreach="doc.order_line" t-as="line"> 
                                 <t t-set="importe_sin_descuento" t-value="line.product_uom_qty * line.price_unit"/>
-                                <tr t-attf-style="color: #{table_body_text_color};">
+                                <tr t-attf-style="color: #{table_body_text_color}; page-break-inside: avoid;">
                                     
-                                    <!-- Descripción -->
-                                    <td t-att-style="'border: 1px solid ' + table_border_color + ';' + ('font-style: italic; font-weight: bold;' if line.display_type == 'line_section' else '')">
+                                    <!-- Descripción: en cursiva y negrita si es sección -->
+                                    <td t-att-style="'padding: 6px; ' + ('border-left: 1px solid ' + table_border_color + '; border-bottom: 1px solid ' + table_border_color + ';' if line.display_type == 'line_section' else 'border: 1px solid ' + table_border_color + ';') + ('font-style: italic; font-weight: bold;' if line.display_type == 'line_section' else '')">
                                         <t t-set="name_parts" t-value="line.name.split('\n')"/>
                                         <t t-if="name_parts">
-                                            <span t-out="name_parts[0]"/>
+                                            <span t-out="name_parts[0]"/> <!-- Título -->
                                             <t t-if="len(name_parts) &gt; 1">
                                                 <br/>
                                                 <em>
@@ -315,23 +308,23 @@
                                         </t>
                                     </td>
                             
-                                    <!-- Cantidad -->
-                                    <td t-att-style="'border: 1px solid ' + table_border_color + ';'">
+                                    <!-- Cantidad: solo si no es sección -->
+                                    <td t-att-style="'padding: 6px; text-align: right; ' + ('border: 1px solid ' + table_border_color if line.display_type != 'line_section' else 'border: none')">
                                         <t t-if="line.display_type != 'line_section'">
                                             <t t-esc="('%.0f' % line.product_uom_qty)"/>
                                         </t>
                                     </td>
                             
-                                    <!-- Precio unitario -->
-                                    <td t-att-style="'border: 1px solid ' + table_border_color + ';'">
+                                    <!-- Precio unitario: solo si no es sección -->
+                                    <td t-att-style="'padding: 6px; text-align: right; ' + ('border: 1px solid ' + table_border_color if line.display_type != 'line_section' else 'border: none')">
                                         <t t-if="line.display_type != 'line_section'">
                                             <t t-esc="doc.currency_id.symbol"/>
                                             <t t-esc="'{:,.0f}'.format(doc.currency_id.round(line.price_unit)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
                                         </t>
                                     </td>
                             
-                                    <!-- Total -->
-                                    <td t-att-style="'border: 1px solid ' + table_border_color + ';'">
+                                    <!-- Total: solo si no es sección -->
+                                    <td t-att-style="'padding: 6px; text-align: right; ' + ('border: 1px solid ' + table_border_color if line.display_type != 'line_section' else 'border: none')">
                                         <t t-if="line.display_type != 'line_section'">
                                             <t t-esc="doc.currency_id.symbol"/>
                                             <t t-esc="'{:,.0f}'.format(doc.currency_id.round(importe_sin_descuento)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
@@ -341,14 +334,13 @@
                             </t>
                         </tbody>
                     </table>
-                    
                     <t t-set="subtotal_sin_descuento" t-value="sum(line.product_uom_qty * line.price_unit for line in doc.order_line)"/>
                     <t t-set="total_descuento" t-value="sum((line.product_uom_qty * line.price_unit * line.discount / 100) for line in doc.order_line)"/>
 
                     <table class="resumen-table">
                         <tr>
-                            <td t-attf-style="color: #{text_color};"><strong>Subtotal</strong></td>
-                            <td t-attf-style="border: 1px solid #{table_border_color}; color: #{text_color};">
+                            <td t-attf-style="text-align: right; padding: 6px; color: #{text_color};"><strong>Subtotal</strong></td>
+                            <td t-attf-style="text-align: right; padding: 6px; border: 1px solid #{table_border_color}; color: #{text_color};">
                                 <strong>
                                     <t t-esc="doc.currency_id.symbol"/> 
                                     <t t-esc="'{:,.2f}'.format(doc.currency_id.round(subtotal_sin_descuento)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
@@ -357,8 +349,8 @@
                         </tr>
                         <t t-if="total_descuento &gt; 0">
                             <tr>
-                                <td t-attf-style="color: #{text_color};"><strong>Descuento</strong></td>
-                                <td t-attf-style="border: 1px solid #{table_border_color}; color: #{text_color};">
+                                <td t-attf-style="text-align: right; padding: 6px; color: #{text_color};"><strong>Descuento</strong></td>
+                                <td t-attf-style="text-align: right; padding: 6px; border: 1px solid #{table_border_color}; color: #{text_color};">
                                     <strong>
                                         <t t-esc="doc.currency_id.symbol"/>
                                         <t t-esc="'{:,.2f}'.format(doc.currency_id.round(total_descuento)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
@@ -367,15 +359,15 @@
                             </tr>
                         </t>
                         <tr>
-                            <td t-attf-style="color: #{text_color};">IVA</td>
-                            <td t-attf-style="border: 1px solid #{table_border_color}; color: #{text_color};">
+                            <td t-attf-style="text-align: right; padding: 6px; color: #{text_color};">IVA</td>
+                            <td t-attf-style="text-align: right; padding: 6px; border: 1px solid #{table_border_color}; color: #{text_color};">
                                 <t t-esc="doc.currency_id.symbol"/> 
                                 <t t-esc="'{:,.2f}'.format(doc.currency_id.round(doc.amount_tax)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
                             </td>
                         </tr>
                         <tr>
-                            <td t-attf-style="color: #{text_color};"><strong>Total</strong></td>
-                            <td t-attf-style="border: 1px solid #{table_border_color}; color: #{text_color};">
+                            <td t-attf-style="text-align: right; padding: 6px; color: #{text_color};"><strong>Total</strong></td>
+                            <td t-attf-style="text-align: right; padding: 6px; border: 1px solid #{table_border_color}; color: #{text_color};">
                                 <strong>
                                     <t t-esc="doc.currency_id.symbol"/> 
                                     <t t-esc="'{:,.2f}'.format(doc.currency_id.round(doc.amount_total)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
@@ -383,7 +375,6 @@
                             </td>
                         </tr>
                     </table>
-                    
                     <t t-if="doc.sale_order_option_ids">
                         <p t-attf-style="font-size: 14px; margin-top: 35px; margin-bottom: 10px; color: #{text_color};">
                             <strong>&gt; ELEMENTOS OPCIONALES</strong>
@@ -391,26 +382,26 @@
                         <table class="optional-elements-table" t-attf-style="border: 1px solid #{table_border_color};">
                             <thead>
                                 <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color};">
-                                    <th t-attf-style="border: 1px solid #{table_border_color}; width: 50%;">Descripción</th>
-                                    <th t-attf-style="border: 1px solid #{table_border_color}; width: 14%;">Cantidad</th>
-                                    <th t-attf-style="border: 1px solid #{table_border_color}; width: 20%;">Precio Unitario</th>
-                                    <th t-attf-style="border: 1px solid #{table_border_color}; width: 16%;">Total</th>
+                                    <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid #{table_border_color};">Descripción</th>
+                                    <th style="width: 14%; padding: 8px; text-align: center; border: 1px solid #{table_border_color};">Cantidad</th>
+                                    <th style="width: 20%; padding: 8px; text-align: center; border: 1px solid #{table_border_color}; white-space: nowrap;">Precio Unitario</th>
+                                    <th style="width: 16%; padding: 8px; text-align: center; border: 1px solid #{table_border_color};">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-foreach="doc.sale_order_option_ids" t-as="option">
                                     <tr t-attf-style="color: #{table_body_text_color};">
-                                        <td t-attf-style="border: 1px solid #{table_border_color};">
+                                        <td t-attf-style="padding: 6px; border: 1px solid #{table_border_color};">
                                             <t t-esc="option.name"/>
                                         </td>
-                                        <td t-attf-style="border: 1px solid #{table_border_color};">
+                                        <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
                                             <t t-esc="('%.0f' % option.quantity)"/>
                                         </td>
-                                        <td t-attf-style="border: 1px solid #{table_border_color};">
+                                        <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
                                             <t t-esc="doc.currency_id.symbol"/>
                                             <t t-esc="'{:,.0f}'.format(doc.currency_id.round(option.price_unit)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
                                         </td>
-                                        <td t-attf-style="border: 1px solid #{table_border_color};">
+                                        <td t-attf-style="padding: 6px; text-align: right; border: 1px solid #{table_border_color};">
                                             <t t-set="option_importe_sin_descuento" t-value="option.quantity * option.price_unit"/>
                                             <t t-esc="doc.currency_id.symbol"/>
                                             <t t-esc="'{:,.0f}'.format(doc.currency_id.round(option_importe_sin_descuento)).replace(',', 'X').replace('.', ',').replace('X', '.')"/>
@@ -420,25 +411,21 @@
                             </tbody>
                         </table>
                     </t>
-                    
-                    <div class="conditions-section">
-                        <p t-attf-style="font-size: 14px; margin-bottom: 10px; color: #{text_color};">
-                            <strong>&gt; CONDICIONES GENERALES</strong>
-                        </p>
-                        <p t-attf-style="font-size: 14px; margin-bottom: 8px; color: #{text_color};">
-                            - Forma de pago: <t t-esc="doc.payment_term_id.name"/>
-                        </p>
-                        <p t-attf-style="font-size: 14px; margin-bottom: 8px; color: #{text_color};">
-                            - Presupuesto válido hasta:
-                            <t t-if="doc.validity_date">
-                                <t t-esc="doc.validity_date.strftime('%d/%m/%Y')"/>
-                            </t>
-                            <t t-if="not doc.validity_date">
-                                sin fecha definida
-                            </t>
-                        </p>
-                    </div>
-
+                    <p t-attf-style="font-size: 14px; margin-top: 35px; margin-bottom: 10px; color: #{text_color};">
+                        <strong>&gt; CONDICIONES GENERALES</strong>
+                    </p>
+                    <p t-attf-style="font-size: 14px; margin-bottom: 8px; color: #{text_color};">
+                        - Forma de pago: <t t-esc="doc.payment_term_id.name"/>
+                    </p>
+                    <p t-attf-style="font-size: 14px; margin-bottom: 8px; color: #{text_color};">
+                        - Presupuesto válido hasta:
+                        <t t-if="doc.validity_date">
+                            <t t-esc="doc.validity_date.strftime('%d/%m/%Y')"/>
+                        </t>
+                        <t t-if="not doc.validity_date">
+                            sin fecha definida
+                        </t>
+                    </p>
                     <div class="oe_structure"/>
 
                 </div>
