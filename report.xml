@@ -124,9 +124,21 @@
                         page-break-inside: auto;
                         break-inside: auto;
                     }
-                    /* Añadir margen superior a la página para evitar solapamiento de header */
+                    /* Helper to force a page break before an element */
+                    .page-break-before {
+                        page-break-before: always;
+                        break-before: page;
+                    }
+                    /* Prevent table rows from splitting and help wkhtmltopdf with min-height */
+                    .cotizacion-table tbody tr, .optional-elements-table tbody tr {
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                        page-break-after: auto;
+                        min-height: 24px; /* Helps prevent row splitting */
+                    }
+                    /* Ensure enough top margin to prevent header overlap. Adjust as needed. */
                     .page-content {
-                        margin-top: 20px;
+                        margin-top: 40px; /* Increase if header still overlaps */
                     }
                     /* Añadir margen superior al primer elemento después de un salto de página */
                     .cotizacion-table, .optional-elements-table {
@@ -306,6 +318,8 @@
                     <p t-attf-style="font-size: 14px; margin-top: 40px; margin-bottom: 10px; color: #{text_color};">
                         <strong>&gt; COTIZACIÓN BASE</strong>
                     </p>
+                    <!-- Force page break before table if needed -->
+                    <div class="page-break-before"/>
                     <table class="cotizacion-table" t-attf-style="border: 1px solid #{table_border_color};">
                         <thead>
                             <tr t-attf-style="background-color: #{table_header_bg}; color: #{table_header_text_color}; page-break-inside: avoid;">
