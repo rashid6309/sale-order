@@ -318,7 +318,7 @@
                     <p t-attf-style="font-size: 14px; margin-top: 40px; margin-bottom: 10px; color: #{text_color};">
                         <strong>&gt; COTIZACIÓN BASE</strong>
                     </p>
-                    <!-- MAGIC: Table chunking to prevent row splitting and header overlap, with correct tag balancing -->
+                    <!-- Clean, robust chunked table logic for order lines -->
                     <t t-set="chunk_size" t-value="10"/>
                     <t t-set="chunks" t-value="[doc.order_line[i:i+chunk_size] for i in range(0, len(doc.order_line), chunk_size)]"/>
                     <t t-foreach="chunks" t-as="chunk">
